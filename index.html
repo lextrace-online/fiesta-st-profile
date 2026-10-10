@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>Ford Fiesta ST – Car Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            neonblue: '#00d4ff',
+            neonpink: '#ff007a',
+            neongreen: '#7fff00',
+            neondanger: '#ff4444',
+            cyberbg: '#0a0a0f',
+            cybercard: 'rgba(0,212,255,0.05)',
+            cyberborder: 'rgba(0,212,255,0.2)',
+          },
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            rajdhani: ['Rajdhani', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --neon-blue: #00d4ff;
+      --neon-pink: #ff007a;
+      --neon-green: #7fff00;
+      --neon-danger: #ff4444;
+      --bg: #0a0a0f;
+      --card-bg: rgba(0,212,255,0.05);
+      --border: rgba(0,212,255,0.2);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: #e0e6f0;
+      font-family: 'Rajdhani', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Scanline Overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,212,255,0.015) 2px,
+        rgba(0,212,255,0.015) 4px
+      );
+    }
+
+    /* Glitch Animation */
+    @keyframes glitch {
+      0%, 100% { text-shadow: 2px 0 var(--neon-pink), -2px 0 var(--neon-blue); transform: translate(0); }
+      20% { text-shadow: -3px 0 var(--neon-pink), 3px 0 var(--neon-blue); transform: translate(2px, -1px); }
+      40% { text-shadow: 3px 0 var(--neon-pink), -3px 0 var(--neon-blue); transform: translate(-2px, 1px); }
+      60% { text-shadow: -1px 0 var(--neon-pink), 1px 0 var(--neon-blue); transform: translate(1px, 0); }
+      80% { text-shadow: 2px 0 var(--neon-pink), -2px 0 var(--neon-blue); transform: translate(-1px, 1px); }
+    }
+    .glitch-text {
+      animation: glitch 3s infinite;
+    }
+
+    /* Neon Flicker */
+    @keyframes neonFlicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue); }
+      20%, 24%, 55% { opacity: 0.7; text-shadow: none; }
+    }
+    .neon-flicker { animation: neonFlicker 4s infinite; }
+
+    /* Perspective Grid */
+    @keyframes gridScroll { 0% { transform: perspective(400px) rotateX(60deg) translateY(0); } 100% { transform: perspective(400px) rotateX(60deg) translateY(40px); } }
+    .hero-grid {
+      position: absolute;
+      bottom: -20px; left: -10%; width: 120%; height: 200px;
+      background-image:
+        linear-gradient(var(--neon-blue) 1px, transparent 1px),
+        linear-gradient(90deg, var(--neon-blue) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.15;
+      animation: gridScroll 2s linear infinite;
+    }
+
+    /* Neon Glow SVG */
+    .neon-glow-svg { filter: drop-shadow(0 0 8px var(--neon-blue)) drop-shadow(0 0 20px rgba(0,212,255,0.3)); }
+    .neon-glow-pink-svg { filter: drop-shadow(0 0 8px var(--neon-pink)) drop-shadow(0 0 20px rgba(255,0,122,0.3)); }
+
+    /* Tab active */
+    .tab-btn { position: relative; transition: color 0.3s, text-shadow 0.3s; }
+    .tab-btn.active {
+      color: var(--neon-blue);
+      text-shadow: 0 0 10px var(--neon-blue), 0 0 20px rgba(0,212,255,0.3);
+    }
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; width: 100%; height: 2px;
+      background: var(--neon-blue);
+      box-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
+    }
+
+    /* Section fade */
+    .tab-content { display: none; animation: fadeIn 0.4s ease; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Cards */
+    .cyber-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .cyber-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 15px rgba(0,212,255,0.3), 0 0 30px rgba(0,212,255,0.1);
+    }
+
+    /* Table glow rows */
+    .glow-table tr { transition: background 0.3s, box-shadow 0.3s; }
+    .glow-table tr:hover { background: rgba(0,212,255,0.08); box-shadow: inset 0 0 20px rgba(0,212,255,0.05); }
+
+    /* Timeline */
+    .timeline-line { position: absolute; left: 16px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--neon-blue), var(--neon-pink)); box-shadow: 0 0 8px var(--neon-blue); }
+    .timeline-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--neon-blue); box-shadow: 0 0 10px var(--neon-blue); position: absolute; left: 11px; top: 6px; }
+
+    /* Progress bar */
+    @keyframes progressFill { from { width: 0; } }
+    .progress-fill { animation: progressFill 1.5s ease-out; }
+
+    /* Race anim */
+    @keyframes raceBar { from { width: 0; } }
+    .race-fill { animation: raceBar var(--race-time) linear forwards; }
+
+    /* Lightbox */
+    .lightbox { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.92); z-index: 10000; display:none; justify-content:center; align-items:center; flex-direction:column; }
+    .lightbox.open { display: flex; }
+
+    /* Neon text glow */
+    .text-glow-blue { text-shadow: 0 0 10px var(--neon-blue), 0 0 30px rgba(0,212,255,0.4); }
+    .text-glow-pink { text-shadow: 0 0 10px var(--neon-pink), 0 0 30px rgba(255,0,122,0.4); }
+    .text-glow-green { text-shadow: 0 0 10px var(--neon-green), 0 0 30px rgba(127,255,0,0.4); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0a0f; }
+    ::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 3px; }
+
+    /* Mobile nav */
+    .mobile-nav { transform: translateX(100%); transition: transform 0.3s ease; }
+    .mobile-nav.open { transform: translateX(0); }
+
+    /* Hero scanline */
+    @keyframes heroScan { 0% { top: -10%; } 100% { top: 110%; } }
+    .hero-scanline {
+      position: absolute; left: 0; width: 100%; height: 4px;
+      background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+      opacity: 0.5;
+      animation: heroScan 3s linear infinite;
+    }
+
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body data-id="0" class="font-rajdhani">
+  <app-icon data-id="1" hidden data-icon="gauge" data-palette="Dark"></app-icon>
+
+  <!-- ===== HERO ===== -->
+  <header data-id="2" id="hero-section-a1b2" class="relative w-full h-[340px] md:h-[420px] overflow-hidden" style="background: linear-gradient(135deg, #050510 0%, #0a0a2e 40%, #0a0a0f 100%);">
+    <div data-id="3" class="hero-grid"></div>
+    <div data-id="4" class="hero-scanline"></div>
+    <!-- Glitch header text -->
+    <div data-id="5" class="absolute top-6 md:top-10 left-0 w-full text-center z-10">
+      <p data-id="6" class="glitch-text font-orbitron text-xs md:text-sm tracking-[0.3em] text-neonblue opacity-70 uppercase">System Online // Vehicle Profile Loaded</p>
+    </div>
+    <!-- Car silhouette SVG -->
+    <div data-id="7" class="absolute inset-0 flex items-center justify-center z-10">
+      <svg data-id="8" class="neon-glow-svg w-[320px] md:w-[520px] h-auto" viewBox="0 0 520 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path data-id="9" d="M60 130 Q60 110 80 100 L130 90 L170 60 Q180 52 200 48 L320 42 Q340 42 355 52 L390 80 L430 95 Q460 105 460 125 L460 135 Q460 142 453 142 L420 142 Q418 120 400 115 Q382 110 370 120 Q358 132 360 142 L165 142 Q163 120 145 115 Q127 110 115 120 Q103 132 105 142 L73 142 Q60 142 60 130 Z" stroke="#00d4ff" stroke-width="2" fill="none" opacity="0.9"/>
+        <circle data-id="10" cx="137" cy="138" r="16" stroke="#00d4ff" stroke-width="2" fill="none" opacity="0.7"/>
+        <circle data-id="11" cx="137" cy="138" r="8" stroke="#00d4ff" stroke-width="1.5" fill="rgba(0,212,255,0.1)"/>
+        <circle data-id="12" cx="388" cy="138" r="16" stroke="#00d4ff" stroke-width="2" fill="none" opacity="0.7"/>
+        <circle data-id="13" cx="388" cy="138" r="8" stroke="#00d4ff" stroke-width="1.5" fill="rgba(0,212,255,0.1)"/>
+        <path data-id="14" d="M170 60 L200 62 L200 88 L145 92 Z" stroke="#00d4ff" stroke-width="1" fill="rgba(0,212,255,0.06)" opacity="0.6"/>
+        <path data-id="15" d="M205 60 L320 48 L360 55 L370 82 L205 88 Z" stroke="#00d4ff" stroke-width="1" fill="rgba(0,212,255,0.06)" opacity="0.6"/>
+        <line data-id="16" x1="80" y1="100" x2="130" y2="100" stroke="#00d4ff" stroke-width="1" opacity="0.4"/>
+        <line data-id="17" x1="390" y1="90" x2="445" y2="105" stroke="#00d4ff" stroke-width="1" opacity="0.4"/>
+        <ellipse data-id="18" cx="100" cy="95" rx="18" ry="6" stroke="#00d4ff" stroke-width="1.5" fill="rgba(0,212,255,0.15)" opacity="0.8"/>
+        <path data-id="19" d="M420 88 L450 100 L450 115 L430 110 Z" stroke="#00d4ff" stroke-width="1.5" fill="rgba(0,212,255,0.15)" opacity="0.8"/>
+      </svg>
+    </div>
+    <!-- Bottom gradient -->
+    <div data-id="20" class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-cyberbg to-transparent z-10"></div>
+  </header>
+
+  <!-- ===== PROFILE HEADER ===== -->
+  <section data-id="21" id="profile-header-c3d4" class="relative z-20 -mt-16 md:-mt-20 px-4 md:px-8 max-w-5xl mx-auto">
+    <div data-id="22" class="flex flex-col md:flex-row items-center md:items-end gap-4 md:gap-6">
+      <!-- Avatar -->
+      <div data-id="23" class="w-28 h-28 md:w-36 md:h-36 rounded-full border-2 border-neonblue flex items-center justify-center flex-shrink-0" style="background: radial-gradient(circle, rgba(0,212,255,0.12) 0%, #0a0a0f 70%); box-shadow: 0 0 20px rgba(0,212,255,0.4), 0 0 40px rgba(0,212,255,0.15);">
+        <svg data-id="24" class="neon-glow-svg w-20 h-20 md:w-24 md:h-24" viewBox="0 0 100 100" fill="none">
+          <path data-id="25" d="M20 70 Q20 55 30 50 L40 46 L43 32 Q45 25 55 22 L65 25 Q72 28 73 35 L74 46 L82 50 Q88 55 88 68 L88 72 Q88 76 84 76 L76 76 Q75 68 70 66 Q65 64 62 68 Q60 72 61 76 L44 76 Q43 72 40 68 Q35 64 30 68 Q27 72 28 76 L20 76 Q16 76 16 72 Z" stroke="#00d4ff" stroke-width="1.5" fill="rgba(0,212,255,0.08)"/>
+          <circle data-id="26" cx="37" cy="73" r="7" stroke="#00d4ff" stroke-width="1.5" fill="none"/>
+          <circle data-id="27" cx="68" cy="73" r="7" stroke="#00d4ff" stroke-width="1.5" fill="none"/>
+          <rect data-id="28" x="38" y="43" rx="2" ry="2" width="10" height="6" stroke="#00d4ff" stroke-width="1" fill="rgba(0,212,255,0.2)"/>
+          <rect data-id="29" x="58" y="43" rx="2" ry="2" width="10" height="6" stroke="#00d4ff" stroke-width="1" fill="rgba(0,212,255,0.2)"/>
+          <path data-id="30" d="M42 38 L48 26 L60 24 L66 36" stroke="#ff007a" stroke-width="1" fill="none" opacity="0.4"/>
+        </svg>
+      </div>
+      <!-- Name + Tagline -->
+      <div data-id="31" class="text-center md:text-left flex-1">
+        <h1 data-id="32" class="font-orbitron text-3xl md:text-5xl font-black text-neonblue neon-flicker text-glow-blue tracking-wide">FIESTA ST 150</h1>
+        <p data-id="33" class="font-rajdhani text-sm md:text-lg font-semibold text-neonpink text-glow-pink mt-1 tracking-wider">Performance Blue • MK7 • Built Not Bought</p>
+      </div>
+    </div>
+    <!-- Stats Bar -->
+    <div data-id="34" id="stats-bar-e5f6" class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+      <div data-id="35" class="cyber-card p-3 md:p-4 text-center">
+        <div data-id="36" class="text-xl md:text-2xl font-orbitron font-bold text-neonblue tabular-nums">24</div>
+        <div data-id="37" class="text-xs md:text-sm text-gray-400 uppercase tracking-wider">🏁 Srazů</div>
+      </div>
+      <div data-id="38" class="cyber-card p-3 md:p-4 text-center">
+        <div data-id="39" class="text-xl md:text-2xl font-orbitron font-bold text-neonblue tabular-nums">11</div>
+        <div data-id="40" class="text-xs md:text-sm text-gray-400 uppercase tracking-wider">⚡ Dragů</div>
+      </div>
+      <div data-id="41" class="cyber-card p-3 md:p-4 text-center">
+        <div data-id="42" class="text-xl md:text-2xl font-orbitron font-bold text-neongreen tabular-nums">7</div>
+        <div data-id="43" class="text-xs md:text-sm text-gray-400 uppercase tracking-wider">🏆 Vítězství</div>
+      </div>
+      <div data-id="44" class="cyber-card p-3 md:p-4 text-center">
+        <div data-id="45" class="text-xl md:text-2xl font-orbitron font-bold text-neonpink tabular-nums">1 337</div>
+        <div data-id="46" class="text-xs md:text-sm text-gray-400 uppercase tracking-wider">❤️ Followers</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== NAV TABS ===== -->
+  <nav data-id="47" id="nav-tabs-g7h8" class="sticky top-0 z-50 mt-8 border-y border-cyberborder" style="background: rgba(10,10,15,0.95); backdrop-filter: blur(10px);">
+    <div data-id="48" class="max-w-5xl mx-auto flex items-center">
+      <!-- Desktop tabs -->
+      <div data-id="49" class="hidden md:flex gap-0 w-full">
+        <button data-id="50" class="tab-btn active font-orbitron text-sm font-semibold px-5 py-3 uppercase tracking-wider text-gray-300 hover:text-neonblue transition-colors" data-tab="about">O Autě</button>
+        <button data-id="51" class="tab-btn font-orbitron text-sm font-semibold px-5 py-3 uppercase tracking-wider text-gray-300 hover:text-neonblue transition-colors" data-tab="gallery">Galerie</button>
+        <button data-id="52" class="tab-btn font-orbitron text-sm font-semibold px-5 py-3 uppercase tracking-wider text-gray-300 hover:text-neonblue transition-colors" data-tab="tuning">Tuning</button>
+        <button data-id="53" class="tab-btn font-orbitron text-sm font-semibold px-5 py-3 uppercase tracking-wider text-gray-300 hover:text-neonblue transition-colors" data-tab="drag">Drag Závody</button>
+        <button data-id="54" class="tab-btn font-orbitron text-sm font-semibold px-5 py-3 uppercase tracking-wider text-gray-300 hover:text-neonblue transition-colors" data-tab="meets">Srazy</button>
+      </div>
+      <!-- Mobile hamburger -->
+      <button data-id="55" id="mobile-menu-btn-i9j0" class="md:hidden p-3 text-neonblue">
+        <i data-id="56" data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+      <span data-id="57" class="md:hidden font-orbitron text-sm text-neonblue uppercase tracking-wider" id="mobile-tab-label-k1l2">O Autě</span>
+    </div>
+    <!-- Mobile menu -->
+    <div data-id="58" id="mobile-nav-m3n4" class="mobile-nav fixed inset-0 z-[10001] flex flex-col md:hidden" style="background: rgba(10,10,15,0.98);">
+      <div data-id="59" class="flex justify-end p-4">
+        <button data-id="60" id="mobile-nav-close-o5p6" class="p-2 text-neonpink">
+          <i data-id="61" data-lucide="x" class="w-7 h-7"></i>
+        </button>
+      </div>
+      <div data-id="62" class="flex flex-col items-center gap-6 mt-10">
+        <button data-id="63" class="mob-tab-btn font-orbitron text-lg font-semibold text-neonblue uppercase tracking-wider" data-tab="about">O Autě</button>
+        <button data-id="64" class="mob-tab-btn font-orbitron text-lg font-semibold text-gray-300 uppercase tracking-wider" data-tab="gallery">Galerie</button>
+        <button data-id="65" class="mob-tab-btn font-orbitron text-lg font-semibold text-gray-300 uppercase tracking-wider" data-tab="tuning">Tuning</button>
+        <button data-id="66" class="mob-tab-btn font-orbitron text-lg font-semibold text-gray-300 uppercase tracking-wider" data-tab="drag">Drag Závody</button>
+        <button data-id="67" class="mob-tab-btn font-orbitron text-lg font-semibold text-gray-300 uppercase tracking-wider" data-tab="meets">Srazy</button>
+      </div>
+    </div>
+  </nav>
+
+  <main data-id="68" class="max-w-5xl mx-auto px-4 md:px-8 py-8 md:py-12">
+
+    <!-- ===== O AUTĚ ===== -->
+    <section data-id="69" id="tab-about" class="tab-content active">
+      <div data-id="70" class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        <!-- Specs -->
+        <div data-id="71" class="cyber-card p-4 md:p-6 overflow-x-auto">
+          <h2 data-id="72" class="font-orbitron text-lg md:text-xl font-bold text-neonblue text-glow-blue mb-4 uppercase tracking-wider">Specifikace</h2>
+          <table data-id="73" class="glow-table w-full text-sm md:text-base">
+            <tbody data-id="74">
+              <tr data-id="75" class="border-b border-cyberborder"><td data-id="76" class="py-2 pr-4 text-gray-400 font-medium">Výrobce</td><td data-id="77" class="py-2 text-gray-100 font-semibold">Ford</td></tr>
+              <tr data-id="78" class="border-b border-cyberborder"><td data-id="79" class="py-2 pr-4 text-gray-400 font-medium">Model</td><td data-id="80" class="py-2 text-gray-100 font-semibold">Fiesta ST</td></tr>
+              <tr data-id="81" class="border-b border-cyberborder"><td data-id="82" class="py-2 pr-4 text-gray-400 font-medium">Generace</td><td data-id="83" class="py-2 text-gray-100 font-semibold">MK7 (2013–2019)</td></tr>
+              <tr data-id="84" class="border-b border-cyberborder"><td data-id="85" class="py-2 pr-4 text-gray-400 font-medium">Motor</td><td data-id="86" class="py-2 text-neonblue font-semibold">1.6L EcoBoost Turbo</td></tr>
+              <tr data-id="87" class="border-b border-cyberborder"><td data-id="88" class="py-2 pr-4 text-gray-400 font-medium">Výkon (stock)</td><td data-id="89" class="py-2 text-gray-100 font-semibold tabular-nums">150 BHP / 182 Nm</td></tr>
+              <tr data-id="90" class="border-b border-cyberborder"><td data-id="91" class="py-2 pr-4 text-gray-400 font-medium">Výkon (po tune)</td><td data-id="92" class="py-2 text-neongreen font-bold tabular-nums">210 BHP / 270 Nm</td></tr>
+              <tr data-id="93" class="border-b border-cyberborder"><td data-id="94" class="py-2 pr-4 text-gray-400 font-medium">Pohon</td><td data-id="95" class="py-2 text-gray-100 font-semibold">FWD</td></tr>
+              <tr data-id="96" class="border-b border-cyberborder"><td data-id="97" class="py-2 pr-4 text-gray-400 font-medium">Převodovka</td><td data-id="98" class="py-2 text-gray-100 font-semibold">6st. manuál</td></tr>
+              <tr data-id="99" class="border-b border-cyberborder"><td data-id="100" class="py-2 pr-4 text-gray-400 font-medium">0–100 km/h (stock)</td><td data-id="101" class="py-2 text-gray-100 font-semibold tabular-nums">6.9 s</td></tr>
+              <tr data-id="102" class="border-b border-cyberborder"><td data-id="103" class="py-2 pr-4 text-gray-400 font-medium">0–100 km/h (po tune)</td><td data-id="104" class="py-2 text-neongreen font-bold tabular-nums">5.7 s</td></tr>
+              <tr data-id="105" class="border-b border-cyberborder"><td data-id="106" class="py-2 pr-4 text-gray-400 font-medium">Max. rychlost</td><td data-id="107" class="py-2 text-gray-100 font-semibold tabular-nums">230 km/h</td></tr>
+              <tr data-id="108" class="border-b border-cyberborder"><td data-id="109" class="py-2 pr-4 text-gray-400 font-medium">Barva</td><td data-id="110" class="py-2 text-neonblue font-bold">Performance Blue</td></tr>
+              <tr data-id="111" class="border-b border-cyberborder"><td data-id="112" class="py-2 pr-4 text-gray-400 font-medium">SPZ</td><td data-id="113" class="py-2 text-gray-100 font-semibold font-orbitron tracking-widest">1ST-4R0</td></tr>
+              <tr data-id="114" class="border-b border-cyberborder"><td data-id="115" class="py-2 pr-4 text-gray-400 font-medium">Rok výroby</td><td data-id="116" class="py-2 text-gray-100 font-semibold tabular-nums">2015</td></tr>
+              <tr data-id="117"><td data-id="118" class="py-2 pr-4 text-gray-400 font-medium">Najeto</td><td data-id="119" class="py-2 text-gray-100 font-semibold tabular-nums">87 400 km</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Bio -->
+        <div data-id="120" class="cyber-card p-4 md:p-6" style="border-color: rgba(255,0,122,0.2);">
+          <h2 data-id="121" class="font-orbitron text-lg md:text-xl font-bold text-neonpink text-glow-pink mb-4 uppercase tracking-wider">Profil</h2>
+          <div data-id="122" class="space-y-3 text-sm md:text-base">
+            <div data-id="123"><span data-id="124" class="text-gray-400">Owner:</span> <span data-id="125" class="text-gray-100 font-semibold">David <span data-id="126" class="text-neonblue">"Neonshift"</span> Procházka</span></div>
+            <div data-id="127"><span data-id="128" class="text-gray-400">Location:</span> <span data-id="129" class="text-gray-100 font-semibold">Praha, CZ 🇨🇿</span></div>
+            <div data-id="130"><span data-id="131" class="text-gray-400">Member since:</span> <span data-id="132" class="text-neonblue font-bold tabular-nums">2019</span></div>
+            <div data-id="133" class="pt-2 border-t border-cyberborder">
+              <p data-id="134" class="italic text-neonpink text-glow-pink text-base md:text-lg font-medium">"Nejrychlejší modrá věc v Praze."</p>
+            </div>
+            <div data-id="135" class="pt-3">
+              <h3 data-id="136" class="font-orbitron text-sm text-neonblue uppercase tracking-wider mb-2">Fun Facts</h3>
+              <ul data-id="137" class="space-y-2">
+                <li data-id="138" class="flex items-start gap-2"><span data-id="139" class="text-neonblue mt-0.5">⚡</span><span data-id="140">Poháněna EcoBoost technologií</span></li>
+                <li data-id="141" class="flex items-start gap-2"><span data-id="142" class="text-neonblue mt-0.5">⚡</span><span data-id="143">Vybavena Quaife ATB diferenciálem</span></li>
+                <li data-id="144" class="flex items-start gap-2"><span data-id="145" class="text-neonblue mt-0.5">⚡</span><span data-id="146">Hlasitý Milltek výfuk</span></li>
+                <li data-id="147" class="flex items-start gap-2"><span data-id="148" class="text-neonblue mt-0.5">⚡</span><span data-id="149">Ford Performance kola 18"</span></li>
+                <li data-id="150" class="flex items-start gap-2"><span data-id="151" class="text-neonblue mt-0.5">⚡</span><span data-id="152">Recaro sedačky</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== GALERIE ===== -->
+    <section data-id="153" id="tab-gallery" class="tab-content">
+      <h2 data-id="154" class="font-orbitron text-xl md:text-2xl font-bold text-neonblue text-glow-blue mb-6 uppercase tracking-wider">Galerie</h2>
+      <div data-id="155" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6" id="gallery-grid-q7r8">
+
+        <!-- Card 1: Car exterior -->
+        <div data-id="156" class="cyber-card p-3 cursor-pointer gallery-card" data-idx="0">
+          <div data-id="157" class="aspect-video bg-gradient-to-br from-[#0a0a2e] to-[#0a0a0f] rounded flex items-center justify-center overflow-hidden">
+            <svg data-id="158" class="neon-glow-svg w-3/4 h-auto" viewBox="0 0 200 80" fill="none"><path data-id="159" d="M20 55 Q20 45 30 42 L55 37 L70 22 Q75 18 85 16 L135 14 Q145 14 150 20 L162 35 L178 40 Q190 44 190 54 L190 58 Q190 60 188 60 L172 60 Q171 52 165 50 Q159 48 155 52 Q152 56 153 60 L60 60 Q59 52 53 50 Q47 48 43 52 Q40 56 41 60 L24 60 Q20 60 20 55Z" stroke="#00d4ff" stroke-width="1" fill="rgba(0,212,255,0.05)"/><circle data-id="160" cx="50" cy="58" r="6" stroke="#00d4ff" stroke-width="1" fill="none"/><circle data-id="161" cx="160" cy="58" r="6" stroke="#00d4ff" stroke-width="1" fill="none"/></svg>
+          </div>
+          <p data-id="162" class="text-xs md:text-sm text-gray-300 mt-2 text-center">Venkovní focení — Praha, Holešovice</p>
+        </div>
+
+        <!-- Card 2: Engine -->
+        <div data-id="163" class="cyber-card p-3 cursor-pointer gallery-card" data-idx="1">
+          <div data-id="164" class="aspect-video bg-gradient-to-br from-[#0a0a2e] to-[#0a0a0f] rounded flex items-center justify-center">
+            <svg data-id="165" class="neon-glow-svg w-2/3 h-auto" viewBox="0 0 100 80" fill="none"><rect data-id="166" x="15" y="20" width="70" height="45" rx="4" stroke="#00d4ff" stroke-width="1.5" fill="rgba(0,212,255,0.05)"/><rect data-id="167" x="25" y="10" width="50" height="14" rx="3" stroke="#00d4ff" stroke-width="1" fill="rgba(0,212,255,0.08)"/><circle data-id="168" cx="35" cy="42" r="8" stroke="#ff007a" stroke-width="1" fill="rgba(255,0,122,0.08)"/><circle data-id="169" cx="65" cy="42" r="8" stroke="#ff007a" stroke-width="1" fill="rgba(255,0,122,0.08)"/><line data-id="170" x1="35" y1="34" x2="35" y2="50" stroke="#ff007a" stroke-width="0.5" opacity="0.5"/><line data-id="171" x1="27" y1="42" x2="43" y2="42" stroke="#ff007a" stroke-width="0.5" opacity="0.5"/><line data-id="172" x1="65" y1="34" x2="65" y2="50" stroke="#ff007a" stroke-width="0.5" opacity="0.5"/><line data-id="173" x1="57" y1="42" x2="73" y2="42" stroke="#ff007a" stroke-width="0.5" opacity="0.5"/><path data-id="174" d="M5 35 L15 30 L15 50 L5 45Z" stroke="#00d4ff" stroke-width="1" fill="rgba(0,212,255,0.08)"/><rect data-id="175" x="85" y="28" width="12" height="30" rx="2" stroke="#00d4ff" stroke-width="1" fill="rgba(0,212,255,0.05)"/></svg>
+          </div>
+          <p data-id="176" class="text-xs md:text-sm text-gray-300 mt-2 text-center">Motorový prostor</p>
+        </div>
+
+        <!-- Card 3: Cockpit -->
+        <div data-id="177" class="cyber-card p-3 cursor-pointer gallery-card" data-idx="2">
+          <div data-id="178" class="aspect-video bg-gradient-to-br from-[#0a0a2e] to-[#0a0a0f] rounded flex items-center justify-center">
+            <svg data-id="179" class="neon-glow-svg w-1/2 h-auto" viewBox="0 0 100 100" fill="none"><circle data-id="180" cx="50" cy="50" r="38" stroke="#00d4ff" stroke-width="2" fill="none"/><circle data-id="181" cx="50" cy="50" r="30" stroke="#00d4ff" stroke-width="1" fill="rgba(0,212,255,0.03)" opacity="0.6"/><circle data-id="182" cx="50" cy="50" r="10" stroke="#ff007a" stroke-width="1.5" fill="rgba(255,0,122,0.1)"/><line data-id="183" x1="50" y1="12" x2="50" y2="22" stroke="#00d4ff" stroke-width="2"/><line data-id="184" x1="50" y1="78" x2="50" y2="88" stroke="#00d4ff" stroke-width="2"/><line data-id="185" x1="12" y1="50" x2="22" y2="50" stroke="#00d4ff" stroke-width="2"/><line data-id="186" x1="78" y1="50" x2="88" y2="50" stroke="#00d4ff" stroke-width="2"/><text data-id="187" x="50" y="54" text-anchor="middle" fill="#ff007a" font-size="8" font-family="Orbitron">ST</text></svg>
+          </div>
+          <p data-id="188" class="text-xs md:text-sm text-gray-300 mt-2 text-center">Cockpit</p>
+        </div>
+
+        <!-- Card 4: Front spoiler -->
+        <div data-id="189" class="cyber-card p-3 cursor-pointer gallery-card" data-idx="3">
+          <div data-id="190" class="aspect-video bg-gradient-to-br from-[#0a0a2e] to-[#0a0a0f] rounded flex items-center justify-center">
+            <svg data-id="191" class="neon-glow-svg w-3/4 h-auto" viewBox="0 0 200 60" fill="none"><path data-id="192" d="M10 50 Q10 40 30 35 L80 25 Q100 22 120 25 L170 35 Q190 40 190 50 Z" stroke="#00d4ff" stroke-width="1.5" fill="rgba(0,212,255,0.04)"/><path data-id="193" d="M30 45 L80 32 Q100 30 120 32 L170 45" stroke="#ff007a" stroke-width="0.8" fill="none" opacity="0.6"/><path data-id="194" d="M50 42 L80 35 Q100 33 120 35 L150 42" stroke="#ff007a" stroke-width="0.5" fill="none" opacity="0.4"/><line data-id="195" x1="60" y1="30" x2="60" y2="48" stroke="#00d4ff" stroke-width="0.5" opacity="0.3"/><line data-id="196" x1="100" y1="28" x2="100" y2="48" stroke="#00d4ff" stroke-width="0.5" opacity="0.3"/><line data-id="197" x1="140" y1="30" x2="140" y2="48" stroke="#00d4ff" stroke-width="0.5" opacity="0.3"/></svg>
+          </div>
+          <p data-id="198" class="text-xs md:text-sm text-gray-300 mt-2 text-center">Detail předního spoileru</p>
+        </div>
+
+        <!-- Card 5: Exhaust -->
+        <div data-id="199" class="cyber-card p-3 cursor-pointer gallery-card" data-idx="4">
+          <div data-id="200" class="aspect-video bg-gradient-to-br from-[#0a0a2e] to-[#0a0a0f] rounded flex items-center justify-center">
+            <svg data-id="201" class="neon-glow-svg w-1/3 h-auto" viewBox="0 0 80 80" fill="none"><circle data-id="202" cx="40" cy="40" r="28" stroke="#00d4ff" stroke-width="2" fill="rgba(0,212,255,0.03)"/><circle data-id="203" cx="40" cy="40" r="22" stroke="#00d4ff" stroke-width="1" fill="none" opacity="0.5"/><circle data-id="204" cx="40" cy="40" r="16" stroke="#ff007a" stroke-width="1" fill="rgba(255,0,122,0.05)" opacity="0.7"/><circle data-id="205" cx="40" cy="40" r="5" stroke="#ff007a" stroke-width="1.5" fill="rgba(255,0,122,0.15)"/><text data-id="206" x="40" y="75" text-anchor="middle" fill="#00d4ff" font-size="6" opacity="0.6" font-family="Orbitron">MILLTEK</text></svg>
+          </div>
+          <p data-id="207" class="text-xs md:text-sm text-gray-300 mt-2 text-center">Výfuk Milltek</p>
+        </div>
+
+        <!-- Card 6: Wheels -->
+        <div data-id="208" class="cyber-card p-3 cursor-pointer gallery-card" data-idx="5">
+          <div data-id="209" class="aspect-video bg-gradient-to-br from-[#0a0a2e] to-[#0a0a0f] rounded flex items-center justify-center">
+            <svg data-id="210" class="neon-glow-svg w-1/3 h-auto" viewBox="0 0 100 100" fill="none"><circle data-id="211" cx="50" cy="50" r="42" stroke="#00d4ff" stroke-width="1.5" fill="none"/><circle data-id="212" cx="50" cy="50" r="38" stroke="#00d4ff" stroke-width="1" fill="rgba(0,212,255,0.03)" opacity="0.6"/><circle data-id="213" cx="50" cy="50" r="15" stroke="#00d4ff" stroke-width="1.5" fill="rgba(0,212,255,0.05)"/><circle data-id="214" cx="50" cy="50" r="6" stroke="#ff007a" stroke-width="1" fill="rgba(255,0,122,0.1)"/><line data-id="215" x1="50" y1="15" x2="50" y2="35" stroke="#00d4ff" stroke-width="1.5" opacity="0.7"/><line data-id="216" x1="50" y1="65" x2="50" y2="85" stroke="#00d4ff" stroke-width="1.5" opacity="0.7"/><line data-id="217" x1="15" y1="50" x2="35" y2="50" stroke="#00d4ff" stroke-width="1.5" opacity="0.7"/><line data-id="218" x1="65" y1="50" x2="85" y2="50" stroke="#00d4ff" stroke-width="1.5" opacity="0.7"/><line data-id="219" x1="25" y1="25" x2="38" y2="38" stroke="#00d4ff" stroke-width="1" opacity="0.5"/><line data-id="220" x1="62" y1="62" x2="75" y2="75" stroke="#00d4ff" stroke-width="1" opacity="0.5"/><line data-id="221" x1="75" y1="25" x2="62" y2="38" stroke="#00d4ff" stroke-width="1" opacity="0.5"/><line data-id="222" x1="25" y1="75" x2="38" y2="62" stroke="#00d4ff" stroke-width="1" opacity="0.5"/></svg>
+          </div>
+          <p data-id="223" class="text-xs md:text-sm text-gray-300 mt-2 text-center">Kola Ford Performance 18"</p>
+        </div>
+
+        <!-- Card 7: Night shoot -->
+        <div data-id="224" class="cyber-card p-3 cursor-pointer gallery-card" data-idx="6">
+          <div data-id="225" class="aspect-video bg-gradient-to-br from-[#0a0a2e] to-[#0a0a0f] rounded flex items-center justify-center overflow-hidden">
+            <svg data-id="226" class="neon-glow-svg w-full h-auto" viewBox="0 0 200 80" fill="none"><rect data-id="227" x="20" y="20" width="15" height="40" fill="rgba(0,212,255,0.08)" stroke="#00d4ff" stroke-width="0.5"/><rect data-id="228" x="40" y="10" width="20" height="50" fill="rgba(0,212,255,0.06)" stroke="#00d4ff" stroke-width="0.5"/><rect data-id="229" x="65" y="25" width="12" height="35" fill="rgba(0,212,255,0.07)" stroke="#00d4ff" stroke-width="0.5"/><rect data-id="230" x="82" y="5" width="25" height="55" fill="rgba(0,212,255,0.05)" stroke="#00d4ff" stroke-width="0.5"/><rect data-id="231" x="112" y="15" width="18" height="45" fill="rgba(0,212,255,0.06)" stroke="#00d4ff" stroke-width="0.5"/><rect data-id="232" x="135" y="8" width="22" height="52" fill="rgba(0,212,255,0.04)" stroke="#00d4ff" stroke-width="0.5"/><rect data-id="233" x="162" y="22" width="16" height="38" fill="rgba(0,212,255,0.07)" stroke="#00d4ff" stroke-width="0.5"/><line data-id="234" x1="0" y1="60" x2="200" y2="60" stroke="#00d4ff" stroke-width="1" opacity="0.3"/><path data-id="235" d="M70 68 Q80 62 90 65 L102 62 Q106 60 110 62 L115 65 Q118 68 114 68Z" stroke="#ff007a" stroke-width="0.8" fill="rgba(255,0,122,0.08)"/></svg>
+          </div>
+          <p data-id="236" class="text-xs md:text-sm text-gray-300 mt-2 text-center">Night shoot — Praha mosty</p>
+        </div>
+
+        <!-- Card 8: Car meet group -->
+        <div data-id="237" class="cyber-card p-3 cursor-pointer gallery-card" data-idx="7">
+          <div data-id="238" class="aspect-video bg-gradient-to-br from-[#0a0a2e] to-[#0a0a0f] rounded flex items-center justify-center">
+            <svg data-id="239" class="neon-glow-svg w-3/4 h-auto" viewBox="0 0 200 60" fill="none"><path data-id="240" d="M10 48 L25 42 L35 30 L55 28 L65 38 L75 42 L80 48Z" stroke="#00d4ff" stroke-width="1" fill="rgba(0,212,255,0.05)"/><path data-id="241" d="M70 48 L85 42 L95 30 L115 28 L125 38 L135 42 L140 48Z" stroke="#ff007a" stroke-width="1" fill="rgba(255,0,122,0.05)"/><path data-id="242" d="M130 48 L145 42 L155 30 L175 28 L185 38 L195 42 L200 48Z" stroke="#00d4ff" stroke-width="1" fill="rgba(0,212,255,0.05)"/><line data-id="243" x1="0" y1="48" x2="200" y2="48" stroke="#00d4ff" stroke-width="0.5" opacity="0.3"/></svg>
+          </div>
+          <p data-id="244" class="text-xs md:text-sm text-gray-300 mt-2 text-center">Sraz Brno 2024</p>
+        </div>
+
+        <!-- Card 9: Drag launch -->
+        <div data-id="245" class="cyber-card p-3 cursor-pointer gallery-card" data-idx="8">
+          <div data-id="246" class="aspect-video bg-gradient-to-br from-[#0a0a2e] to-[#0a0a0f] rounded flex items-center justify-center overflow-hidden">
+            <svg data-id="247" class="neon-glow-svg w-3/4 h-auto" viewBox="0 0 200 80" fill="none"><path data-id="248" d="M60 55 Q60 48 70 45 L90 40 L100 28 L130 25 L145 35 L160 42 Q170 45 170 53 L170 56 Q170 58 168 58 L158 58 Q157 52 153 50 Q149 48 146 52 Q144 56 145 58 L90 58 Q89 52 85 50 Q81 48 78 52 Q76 56 77 58 L65 58 Q60 58 60 55Z" stroke="#00d4ff" stroke-width="1" fill="rgba(0,212,255,0.05)"/><circle data-id="249" cx="83" cy="56" r="5" stroke="#00d4ff" stroke-width="1" fill="none"/><circle data-id="250" cx="150" cy="56" r="5" stroke="#00d4ff" stroke-width="1" fill="none"/><ellipse data-id="251" cx="50" cy="55" rx="20" ry="8" fill="none" stroke="#ff007a" stroke-width="0.5" opacity="0.4"/><ellipse data-id="252" cx="45" cy="55" rx="15" ry="6" fill="none" stroke="#ff007a" stroke-width="0.5" opacity="0.3"/><ellipse data-id="253" cx="40" cy="55" rx="10" ry="4" fill="none" stroke="#ff007a" stroke-width="0.5" opacity="0.2"/><line data-id="254" x1="0" y1="62" x2="200" y2="62" stroke="#00d4ff" stroke-width="0.5" opacity="0.2"/></svg>
+          </div>
+          <p data-id="255" class="text-xs md:text-sm text-gray-300 mt-2 text-center">Drag závodní start</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TUNING ===== -->
+    <section data-id="256" id="tab-tuning" class="tab-content">
+      <!-- Total -->
+      <div data-id="257" class="cyber-card p-5 md:p-8 text-center mb-8" style="border-color: rgba(127,255,0,0.25); box-shadow: 0 0 30px rgba(127,255,0,0.08);">
+        <p data-id="258" class="font-orbitron text-xs md:text-sm uppercase tracking-[0.25em] text-gray-400 mb-2">Celková investice do tuningu</p>
+        <p data-id="259" class="font-orbitron text-3xl md:text-5xl font-black text-neongreen text-glow-green tabular-nums">252 000 Kč</p>
+      </div>
+
+      <h2 data-id="260" class="font-orbitron text-xl md:text-2xl font-bold text-neonblue text-glow-blue mb-6 uppercase tracking-wider">Tuning Timeline</h2>
+
+      <div data-id="261" class="relative pl-10 md:pl-14 space-y-6" id="tuning-timeline-s9t0">
+        <div data-id="262" class="timeline-line"></div>
+
+        <div data-id="263" class="relative"><div data-id="264" class="timeline-dot"></div><div data-id="265" class="cyber-card p-4"><div data-id="266" class="flex flex-wrap items-center gap-2 mb-1"><span data-id="267" class="font-orbitron text-xs bg-neonblue text-cyberbg px-2 py-0.5 rounded font-bold tabular-nums">2019</span><span data-id="268" class="text-sm md:text-base font-semibold text-gray-100">Stage 1 ECU Remap (+45 BHP)</span></div><p data-id="269" class="text-xs md:text-sm text-gray-400">Prvotní úprava řídící jednotky pro větší výkon</p><p data-id="270" class="text-sm font-orbitron text-neongreen font-bold mt-1 tabular-nums">8 500 Kč</p></div></div>
+
+        <div data-id="271" class="relative"><div data-id="272" class="timeline-dot" style="background:var(--neon-pink); box-shadow:0 0 10px var(--neon-pink)"></div><div data-id="273" class="cyber-card p-4"><div data-id="274" class="flex flex-wrap items-center gap-2 mb-1"><span data-id="275" class="font-orbitron text-xs bg-neonpink text-white px-2 py-0.5 rounded font-bold tabular-nums">2020</span><span data-id="276" class="text-sm md:text-base font-semibold text-gray-100">Milltek Sport Cat-back výfuk</span></div><p data-id="277" class="text-xs md:text-sm text-gray-400">Nerezový sportovní výfukový systém</p><p data-id="278" class="text-sm font-orbitron text-neongreen font-bold mt-1 tabular-nums">22 000 Kč</p></div></div>
+
+        <div data-id="279" class="relative"><div data-id="280" class="timeline-dot"></div><div data-id="281" class="cyber-card p-4"><div data-id="282" class="flex flex-wrap items-center gap-2 mb-1"><span data-id="283" class="font-orbitron text-xs bg-neonblue text-cyberbg px-2 py-0.5 rounded font-bold tabular-nums">2020</span><span data-id="284" class="text-sm md:text-base font-semibold text-gray-100">Ford Performance 18" kola</span></div><p data-id="285" class="text-xs md:text-sm text-gray-400">Originální Ford Performance sada kol</p><p data-id="286" class="text-sm font-orbitron text-neongreen font-bold mt-1 tabular-nums">28 000 Kč</p></div></div>
+
+        <div data-id="287" class="relative"><div data-id="288" class="timeline-dot" style="background:var(--neon-pink); box-shadow:0 0 10px var(--neon-pink)"></div><div data-id="289" class="cyber-card p-4"><div data-id="290" class="flex flex-wrap items-center gap-2 mb-1"><span data-id="291" class="font-orbitron text-xs bg-neonpink text-white px-2 py-0.5 rounded font-bold tabular-nums">2021</span><span data-id="292" class="text-sm md:text-base font-semibold text-gray-100">Quaife ATB Diferenciál</span></div><p data-id="293" class="text-xs md:text-sm text-gray-400">Samosvorný diferenciál pro lepší trakci</p><p data-id="294" class="text-sm font-orbitron text-neongreen font-bold mt-1 tabular-nums">35 000 Kč</p></div></div>
+
+        <div data-id="295" class="relative"><div data-id="296" class="timeline-dot"></div><div data-id="297" class="cyber-card p-4"><div data-id="298" class="flex flex-wrap items-center gap-2 mb-1"><span data-id="299" class="font-orbitron text-xs bg-neonblue text-cyberbg px-2 py-0.5 rounded font-bold tabular-nums">2021</span><span data-id="300" class="text-sm md:text-base font-semibold text-gray-100">Coilover KW Variant 2</span></div><p data-id="301" class="text-xs md:text-sm text-gray-400">Nastavitelný podvozek pro závodní i denní jízdu</p><p data-id="302" class="text-sm font-orbitron text-neongreen font-bold mt-1 tabular-nums">32 000 Kč</p></div></div>
+
+        <div data-id="303" class="relative"><div data-id="304" class="timeline-dot" style="background:var(--neon-pink); box-shadow:0 0 10px var(--neon-pink)"></div><div data-id="305" class="cyber-card p-4"><div data-id="306" class="flex flex-wrap items-center gap-2 mb-1"><span data-id="307" class="font-orbitron text-xs bg-neonpink text-white px-2 py-0.5 rounded font-bold tabular-nums">2022</span><span data-id="308" class="text-sm md:text-base font-semibold text-gray-100">Recaro Sportster CS sedačky</span></div><p data-id="309" class="text-xs md:text-sm text-gray-400">Závodní skořepinové sedačky</p><p data-id="310" class="text-sm font-orbitron text-neongreen font-bold mt-1 tabular-nums">45 000 Kč</p></div></div>
+
+        <div data-id="311" class="relative"><div data-id="312" class="timeline-dot"></div><div data-id="313" class="cyber-card p-4"><div data-id="314" class="flex flex-wrap items-center gap-2 mb-1"><span data-id="315" class="font-orbitron text-xs bg-neonblue text-cyberbg px-2 py-0.5 rounded font-bold tabular-nums">2022</span><span data-id="316" class="text-sm md:text-base font-semibold text-gray-100">Wagner Intercooler upgrade</span></div><p data-id="317" class="text-xs md:text-sm text-gray-400">Výkonnější mezichladič pro lepší chlazení plnícího vzduchu</p><p data-id="318" class="text-sm font-orbitron text-neongreen font-bold mt-1 tabular-nums">14 000 Kč</p></div></div>
+
+        <div data-id="319" class="relative"><div data-id="320" class="timeline-dot" style="background:var(--neon-pink); box-shadow:0 0 10px var(--neon-pink)"></div><div data-id="321" class="cyber-card p-4"><div data-id="322" class="flex flex-wrap items-center gap-2 mb-1"><span data-id="323" class="font-orbitron text-xs bg-neonpink text-white px-2 py-0.5 rounded font-bold tabular-nums">2023</span><span data-id="324" class="text-sm md:text-base font-semibold text-gray-100">Maxton Design full body kit</span></div><p data-id="325" class="text-xs md:text-sm text-gray-400">Kompletní sada aerodynamických doplňků</p><p data-id="326" class="text-sm font-orbitron text-neongreen font-bold mt-1 tabular-nums">18 000 Kč</p></div></div>
+
+        <div data-id="327" class="relative"><div data-id="328" class="timeline-dot"></div><div data-id="329" class="cyber-card p-4"><div data-id="330" class="flex flex-wrap items-center gap-2 mb-1"><span data-id="331" class="font-orbitron text-xs bg-neonblue text-cyberbg px-2 py-0.5 rounded font-bold tabular-nums">2023</span><span data-id="332" class="text-sm md:text-base font-semibold text-gray-100">Stage 2 Remap (na 210 BHP)</span></div><p data-id="333" class="text-xs md:text-sm text-gray-400">Finální kalibrace ECU s podporou hardwarových úprav</p><p data-id="334" class="text-sm font-orbitron text-neongreen font-bold mt-1 tabular-nums">12 000 Kč</p></div></div>
+
+        <div data-id="335" class="relative"><div data-id="336" class="timeline-dot" style="background:var(--neon-pink); box-shadow:0 0 10px var(--neon-pink)"></div><div data-id="337" class="cyber-card p-4"><div data-id="338" class="flex flex-wrap items-center gap-2 mb-1"><span data-id="339" class="font-orbitron text-xs bg-neonpink text-white px-2 py-0.5 rounded font-bold tabular-nums">2024</span><span data-id="340" class="text-sm md:text-base font-semibold text-gray-100">Brembo brzdový kit přední nápravy</span></div><p data-id="341" class="text-xs md:text-sm text-gray-400">Čtyřpístkové brzdové třmeny s většími kotouči</p><p data-id="342" class="text-sm font-orbitron text-neongreen font-bold mt-1 tabular-nums">25 000 Kč</p></div></div>
+
+        <div data-id="343" class="relative"><div data-id="344" class="timeline-dot"></div><div data-id="345" class="cyber-card p-4"><div data-id="346" class="flex flex-wrap items-center gap-2 mb-1"><span data-id="347" class="font-orbitron text-xs bg-neonblue text-cyberbg px-2 py-0.5 rounded font-bold tabular-nums">2025</span><span data-id="348" class="text-sm md:text-base font-semibold text-gray-100">Folíování detailů neon modrá</span></div><p data-id="349" class="text-xs md:text-sm text-gray-400">Dekorativní fólie v neon modré na detailech karoserie</p><p data-id="350" class="text-sm font-orbitron text-neongreen font-bold mt-1 tabular-nums">9 000 Kč</p></div></div>
+
+        <div data-id="351" class="relative"><div data-id="352" class="timeline-dot" style="background:var(--neon-green); box-shadow:0 0 10px var(--neon-green)"></div><div data-id="353" class="cyber-card p-4" style="border-color:rgba(127,255,0,0.3);"><div data-id="354" class="flex flex-wrap items-center gap-2 mb-1"><span data-id="355" class="font-orbitron text-xs bg-neongreen text-cyberbg px-2 py-0.5 rounded font-bold tabular-nums">2026</span><span data-id="356" class="text-sm md:text-base font-semibold text-neongreen">Launch Control aktivace</span></div><p data-id="357" class="text-xs md:text-sm text-gray-400">Aktivace launch control funkce pro optimální starty</p><p data-id="358" class="text-sm font-orbitron text-neongreen font-bold mt-1 tabular-nums">3 500 Kč</p></div></div>
+      </div>
+    </section>
+
+    <!-- ===== DRAG ZÁVODY ===== -->
+    <section data-id="359" id="tab-drag" class="tab-content">
+      <h2 data-id="360" class="font-orbitron text-xl md:text-2xl font-bold text-neonblue text-glow-blue mb-6 uppercase tracking-wider">Drag Závody</h2>
+
+      <!-- Stats -->
+      <div data-id="361" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div data-id="362" class="cyber-card p-4 text-center">
+          <p data-id="363" class="text-xs text-gray-400 font-orbitron uppercase tracking-wider">Nejlepší čas</p>
+          <p data-id="364" class="font-orbitron text-2xl md:text-3xl font-black text-neongreen text-glow-green tabular-nums mt-1">12.89s</p>
+        </div>
+        <div data-id="365" class="cyber-card p-4 text-center">
+          <p data-id="366" class="text-xs text-gray-400 font-orbitron uppercase tracking-wider">Win Rate</p>
+          <p data-id="367" class="font-orbitron text-2xl md:text-3xl font-black text-neonblue text-glow-blue tabular-nums mt-1">63.6%</p>
+        </div>
+        <div data-id="368" class="cyber-card p-4 text-center">
+          <p data-id="369" class="text-xs text-gray-400 font-orbitron uppercase tracking-wider">Celkem závodů</p>
+          <p data-id="370" class="font-orbitron text-2xl md:text-3xl font-black text-neonpink text-glow-pink tabular-nums mt-1">11</p>
+        </div>
+      </div>
+
+      <!-- Personal best progress -->
+      <div data-id="371" class="cyber-card p-4 mb-6">
+        <p data-id="372" class="text-xs text-gray-400 font-orbitron uppercase tracking-wider mb-2">Progres osobního rekordu</p>
+        <div data-id="373" class="w-full bg-gray-800 rounded-full h-4 overflow-hidden">
+          <div data-id="374" class="progress-fill h-full rounded-full" style="width:88%; background: linear-gradient(90deg, var(--neon-blue), var(--neon-green));box-shadow:0 0 10px var(--neon-blue);"></div>
+        </div>
+        <div data-id="375" class="flex justify-between text-xs text-gray-500 mt-1 tabular-nums"><span data-id="376">13.51s (nejhorší)</span><span data-id="377">12.89s (nejlepší)</span></div>
+      </div>
+
+      <!-- Table -->
+      <div data-id="378" class="cyber-card overflow-x-auto">
+        <table data-id="379" class="glow-table w-full text-xs md:text-sm">
+          <thead data-id="380">
+            <tr data-id="381" class="border-b-2 border-neonblue">
+              <th data-id="382" class="p-2 md:p-3 text-left font-orbitron text-neonblue">#</th>
+              <th data-id="383" class="p-2 md:p-3 text-left font-orbitron text-neonblue">Datum</th>
+              <th data-id="384" class="p-2 md:p-3 text-left font-orbitron text-neonblue hidden sm:table-cell">Místo</th>
+              <th data-id="385" class="p-2 md:p-3 text-left font-orbitron text-neonblue">Soupeř</th>
+              <th data-id="386" class="p-2 md:p-3 text-left font-orbitron text-neonblue tabular-nums">Čas</th>
+              <th data-id="387" class="p-2 md:p-3 text-left font-orbitron text-neonblue">Výsledek</th>
+            </tr>
+          </thead>
+          <tbody data-id="388">
+            <tr data-id="389" class="border-b border-cyberborder"><td data-id="390" class="p-2 md:p-3 tabular-nums">1</td><td data-id="391" class="p-2 md:p-3 tabular-nums">03/2021</td><td data-id="392" class="p-2 md:p-3 hidden sm:table-cell">Hradec Králové</td><td data-id="393" class="p-2 md:p-3">Honda Civic Type R FK8</td><td data-id="394" class="p-2 md:p-3 tabular-nums">13.42s</td><td data-id="395" class="p-2 md:p-3 text-neongreen font-bold">🏆 VÝHRA</td></tr>
+            <tr data-id="396" class="border-b border-cyberborder"><td data-id="397" class="p-2 md:p-3 tabular-nums">2</td><td data-id="398" class="p-2 md:p-3 tabular-nums">07/2021</td><td data-id="399" class="p-2 md:p-3 hidden sm:table-cell">Most Circuit</td><td data-id="400" class="p-2 md:p-3">VW Golf GTI Mk7</td><td data-id="401" class="p-2 md:p-3 tabular-nums">13.38s</td><td data-id="402" class="p-2 md:p-3 text-neongreen font-bold">🏆 VÝHRA</td></tr>
+            <tr data-id="403" class="border-b border-cyberborder"><td data-id="404" class="p-2 md:p-3 tabular-nums">3</td><td data-id="405" class="p-2 md:p-3 tabular-nums">09/2021</td><td data-id="406" class="p-2 md:p-3 hidden sm:table-cell">Hradec Králové</td><td data-id="407" class="p-2 md:p-3">BMW 135i E82</td><td data-id="408" class="p-2 md:p-3 tabular-nums">13.51s</td><td data-id="409" class="p-2 md:p-3 text-neondanger font-bold">❌ PROHRA</td></tr>
+            <tr data-id="410" class="border-b border-cyberborder"><td data-id="411" class="p-2 md:p-3 tabular-nums">4</td><td data-id="412" class="p-2 md:p-3 tabular-nums">04/2022</td><td data-id="413" class="p-2 md:p-3 hidden sm:table-cell">Most Circuit</td><td data-id="414" class="p-2 md:p-3">Renault Megane RS 265</td><td data-id="415" class="p-2 md:p-3 tabular-nums">13.21s</td><td data-id="416" class="p-2 md:p-3 text-neongreen font-bold">🏆 VÝHRA</td></tr>
+            <tr data-id="417" class="border-b border-cyberborder"><td data-id="418" class="p-2 md:p-3 tabular-nums">5</td><td data-id="419" class="p-2 md:p-3 tabular-nums">06/2022</td><td data-id="420" class="p-2 md:p-3 hidden sm:table-cell">Brno Circuit</td><td data-id="421" class="p-2 md:p-3">Ford Focus ST Mk3</td><td data-id="422" class="p-2 md:p-3 tabular-nums">13.19s</td><td data-id="423" class="p-2 md:p-3 text-neongreen font-bold">🏆 VÝHRA</td></tr>
+            <tr data-id="424" class="border-b border-cyberborder"><td data-id="425" class="p-2 md:p-3 tabular-nums">6</td><td data-id="426" class="p-2 md:p-3 tabular-nums">09/2022</td><td data-id="427" class="p-2 md:p-3 hidden sm:table-cell">Pardubice</td><td data-id="428" class="p-2 md:p-3">Subaru WRX STI</td><td data-id="429" class="p-2 md:p-3 tabular-nums">13.44s</td><td data-id="430" class="p-2 md:p-3 text-neondanger font-bold">❌ PROHRA</td></tr>
+            <tr data-id="431" class="border-b border-cyberborder"><td data-id="432" class="p-2 md:p-3 tabular-nums">7</td><td data-id="433" class="p-2 md:p-3 tabular-nums">03/2023</td><td data-id="434" class="p-2 md:p-3 hidden sm:table-cell">Most Circuit</td><td data-id="435" class="p-2 md:p-3">Peugeot 308 GTi</td><td data-id="436" class="p-2 md:p-3 tabular-nums">13.08s</td><td data-id="437" class="p-2 md:p-3 text-neongreen font-bold">🏆 VÝHRA</td></tr>
+            <tr data-id="438" class="border-b border-cyberborder"><td data-id="439" class="p-2 md:p-3 tabular-nums">8</td><td data-id="440" class="p-2 md:p-3 tabular-nums">07/2023</td><td data-id="441" class="p-2 md:p-3 hidden sm:table-cell">Brno Circuit</td><td data-id="442" class="p-2 md:p-3">Hyundai i30N</td><td data-id="443" class="p-2 md:p-3 tabular-nums">13.11s</td><td data-id="444" class="p-2 md:p-3 text-neondanger font-bold">❌ PROHRA</td></tr>
+            <tr data-id="445" class="border-b border-cyberborder"><td data-id="446" class="p-2 md:p-3 tabular-nums">9</td><td data-id="447" class="p-2 md:p-3 tabular-nums">10/2023</td><td data-id="448" class="p-2 md:p-3 hidden sm:table-cell">Hradec Králové</td><td data-id="449" class="p-2 md:p-3">Seat Leon Cupra</td><td data-id="450" class="p-2 md:p-3 tabular-nums">12.97s</td><td data-id="451" class="p-2 md:p-3 text-neongreen font-bold">🏆 VÝHRA</td></tr>
+            <tr data-id="452" class="border-b border-cyberborder"><td data-id="453" class="p-2 md:p-3 tabular-nums">10</td><td data-id="454" class="p-2 md:p-3 tabular-nums">05/2024</td><td data-id="455" class="p-2 md:p-3 hidden sm:table-cell">Most Circuit</td><td data-id="456" class="p-2 md:p-3">Audi S3 8V</td><td data-id="457" class="p-2 md:p-3 tabular-nums">13.23s</td><td data-id="458" class="p-2 md:p-3 text-neondanger font-bold">❌ PROHRA</td></tr>
+            <tr data-id="459"><td data-id="460" class="p-2 md:p-3 tabular-nums">11</td><td data-id="461" class="p-2 md:p-3 tabular-nums">09/2024</td><td data-id="462" class="p-2 md:p-3 hidden sm:table-cell">Brno Circuit</td><td data-id="463" class="p-2 md:p-3">Mini Cooper JCW</td><td data-id="464" class="p-2 md:p-3 tabular-nums">12.89s</td><td data-id="465" class="p-2 md:p-3 text-neongreen font-bold">🏆 VÝHRA</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Race Simulator -->
+      <div data-id="466" class="mt-8 cyber-card p-5 md:p-8 text-center" style="border-color: rgba(255,0,122,0.3);">
+        <h3 data-id="467" class="font-orbitron text-lg md:text-xl text-neonpink text-glow-pink uppercase tracking-wider mb-4">Simulátor závodu</h3>
+        <button data-id="468" id="race-btn-u1v2" class="font-orbitron text-sm md:text-base font-bold px-6 py-3 rounded bg-neonpink text-white uppercase tracking-widest hover:shadow-[0_0_20px_rgba(255,0,122,0.5)] transition-all min-h-[44px] min-w-[44px] cursor-pointer">⚡ Simulovat Závod</button>
+        <div data-id="469" id="race-arena-w3x4" class="mt-6 hidden">
+          <div data-id="470" id="race-countdown-y5z6" class="font-orbitron text-4xl md:text-6xl font-black text-neonblue text-glow-blue tabular-nums"></div>
+          <div data-id="471" id="race-bars-a7b8" class="mt-6 space-y-4 hidden">
+            <div data-id="472">
+              <div data-id="473" class="flex justify-between text-sm mb-1"><span data-id="474" class="text-neonblue font-orbitron font-bold">FIESTA ST 150</span><span data-id="475" id="race-time-me-c9d0" class="tabular-nums text-neongreen"></span></div>
+              <div data-id="476" class="w-full bg-gray-800 rounded-full h-5 overflow-hidden"><div data-id="477" id="bar-me-e1f2" class="h-full rounded-full" style="width:0;background:linear-gradient(90deg,#00d4ff,#7fff00);box-shadow:0 0 10px #00d4ff;"></div></div>
+            </div>
+            <div data-id="478">
+              <div data-id="479" class="flex justify-between text-sm mb-1"><span data-id="480" class="text-neonpink font-orbitron font-bold" id="opponent-name-g3h4">SOUPEŘ</span><span data-id="481" id="race-time-opp-i5j6" class="tabular-nums text-neonpink"></span></div>
+              <div data-id="482" class="w-full bg-gray-800 rounded-full h-5 overflow-hidden"><div data-id="483" id="bar-opp-k7l8" class="h-full rounded-full" style="width:0;background:linear-gradient(90deg,#ff007a,#ff4444);box-shadow:0 0 10px #ff007a;"></div></div>
+            </div>
+          </div>
+          <div data-id="484" id="race-result-m9n0" class="mt-6 font-orbitron text-xl md:text-3xl font-black hidden glitch-text"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SRAZY ===== -->
+    <section data-id="485" id="tab-meets" class="tab-content">
+      <h2 data-id="486" class="font-orbitron text-xl md:text-2xl font-bold text-neonblue text-glow-blue mb-6 uppercase tracking-wider">Srazy & Eventy</h2>
+      <div data-id="487" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+
+        <div data-id="488" class="cyber-card p-4 hover:scale-[1.03] transition-transform cursor-default">
+          <div data-id="489" class="flex items-center gap-2 mb-2"><span data-id="490" class="text-xl">🏅</span><span data-id="491" class="font-orbitron text-xs text-neonblue uppercase tracking-wider">Únor 2022</span></div>
+          <h3 data-id="492" class="font-orbitron text-sm md:text-base font-bold text-gray-100">Pražský autosalon Custom Show</h3>
+          <p data-id="493" class="text-xs text-gray-500 mt-1">Praha Letňany</p>
+          <p data-id="494" class="text-xs text-neongreen mt-2 font-semibold">Top 10 v kategorii Hot Hatch</p>
+        </div>
+
+        <div data-id="495" class="cyber-card p-4 hover:scale-[1.03] transition-transform cursor-default" style="border-color:rgba(127,255,0,0.3);">
+          <div data-id="496" class="flex items-center gap-2 mb-2"><span data-id="497" class="text-xl">🏆</span><span data-id="498" class="font-orbitron text-xs text-neongreen uppercase tracking-wider">Červen 2022</span></div>
+          <h3 data-id="499" class="font-orbitron text-sm md:text-base font-bold text-gray-100">Brno Tuning Sraz</h3>
+          <p data-id="500" class="text-xs text-gray-500 mt-1">Brno Circuit</p>
+          <p data-id="501" class="text-xs text-neongreen mt-2 font-semibold">Nejhezčí Ford hlasování</p>
+        </div>
+
+        <div data-id="502" class="cyber-card p-4 hover:scale-[1.03] transition-transform cursor-default">
+          <div data-id="503" class="flex items-center gap-2 mb-2"><span data-id="504" class="text-xl">⭐</span><span data-id="505" class="font-orbitron text-xs text-neonpink uppercase tracking-wider">Říjen 2022</span></div>
+          <h3 data-id="506" class="font-orbitron text-sm md:text-base font-bold text-gray-100">Nočný Sraz Praha</h3>
+          <p data-id="507" class="text-xs text-gray-500 mt-1">Praha Holešovice</p>
+          <p data-id="508" class="text-xs text-neonpink mt-2 font-semibold">Featured car večera</p>
+        </div>
+
+        <div data-id="509" class="cyber-card p-4 hover:scale-[1.03] transition-transform cursor-default">
+          <div data-id="510" class="flex items-center gap-2 mb-2"><span data-id="511" class="text-xl">🚗</span><span data-id="512" class="font-orbitron text-xs text-neonblue uppercase tracking-wider">Duben 2023</span></div>
+          <h3 data-id="513" class="font-orbitron text-sm md:text-base font-bold text-gray-100">Czech Stance Fest</h3>
+          <p data-id="514" class="text-xs text-gray-500 mt-1">Olomouc</p>
+          <p data-id="515" class="text-xs text-gray-300 mt-2 font-semibold">Účast, 350+ aut</p>
+        </div>
+
+        <div data-id="516" class="cyber-card p-4 hover:scale-[1.03] transition-transform cursor-default" style="border-color:rgba(255,0,122,0.3);">
+          <div data-id="517" class="flex items-center gap-2 mb-2"><span data-id="518" class="text-xl">🥈</span><span data-id="519" class="font-orbitron text-xs text-neonpink uppercase tracking-wider">Září 2023</span></div>
+          <h3 data-id="520" class="font-orbitron text-sm md:text-base font-bold text-gray-100">Slovakia Tuning Show</h3>
+          <p data-id="521" class="text-xs text-gray-500 mt-1">Bratislava</p>
+          <p data-id="522" class="text-xs text-neonpink mt-2 font-semibold">2. místo Hot Hatch kategorie</p>
+        </div>
+
+        <div data-id="523" class="cyber-card p-4 hover:scale-[1.03] transition-transform cursor-default" style="border-color:rgba(127,255,0,0.3);">
+          <div data-id="524" class="flex items-center gap-2 mb-2"><span data-id="525" class="text-xl">🏆</span><span data-id="526" class="font-orbitron text-xs text-neongreen uppercase tracking-wider">Července 2024</span></div>
+          <h3 data-id="527" class="font-orbitron text-sm md:text-base font-bold text-gray-100">Street Machines Sraz</h3>
+          <p data-id="528" class="text-xs text-gray-500 mt-1">Hradec Králové</p>
+          <p data-id="529" class="text-xs text-neongreen mt-2 font-semibold">Best Engine Bay cena</p>
+        </div>
+
+        <div data-id="530" class="cyber-card p-4 hover:scale-[1.03] transition-transform cursor-default">
+          <div data-id="531" class="flex items-center gap-2 mb-2"><span data-id="532" class="text-xl">📸</span><span data-id="533" class="font-orbitron text-xs text-neonblue uppercase tracking-wider">Října 2024</span></div>
+          <h3 data-id="534" class="font-orbitron text-sm md:text-base font-bold text-gray-100">Praha Night Crawlers</h3>
+          <p data-id="535" class="text-xs text-gray-500 mt-1">Praha centrum</p>
+          <p data-id="536" class="text-xs text-neonblue mt-2 font-semibold">Featured na IG stránce akce</p>
+        </div>
+
+        <div data-id="537" class="cyber-card p-4 hover:scale-[1.03] transition-transform cursor-default">
+          <div data-id="538" class="flex items-center gap-2 mb-2"><span data-id="539" class="text-xl">🏅</span><span data-id="540" class="font-orbitron text-xs text-neonblue uppercase tracking-wider">Března 2025</span></div>
+          <h3 data-id="541" class="font-orbitron text-sm md:text-base font-bold text-gray-100">Tuning World Praha</h3>
+          <p data-id="542" class="text-xs text-gray-500 mt-1">Praha Výstaviště</p>
+          <p data-id="543" class="text-xs text-neongreen mt-2 font-semibold">Top 3 Hot Hatch</p>
+        </div>
+
+        <div data-id="544" class="cyber-card p-4 hover:scale-[1.03] transition-transform cursor-default" style="border-color:rgba(127,255,0,0.3);">
+          <div data-id="545" class="flex items-center gap-2 mb-2"><span data-id="546" class="text-xl">🏆</span><span data-id="547" class="font-orbitron text-xs text-neongreen uppercase tracking-wider">Červen 2025</span></div>
+          <h3 data-id="548" class="font-orbitron text-sm md:text-base font-bold text-gray-100">Brno Summer Sraz</h3>
+          <p data-id="549" class="text-xs text-gray-500 mt-1">Brno</p>
+          <p data-id="550" class="text-xs text-neongreen mt-2 font-semibold">Výhra anketního hlasování</p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== LIGHTBOX ===== -->
+  <div data-id="551" id="lightbox-o1p2" class="lightbox">
+    <button data-id="552" id="lightbox-close-q3r4" class="absolute top-4 right-4 p-3 text-neonpink hover:text-white transition-colors z-10 cursor-pointer min-h-[44px] min-w-[44px]">
+      <i data-id="553" data-lucide="x" class="w-8 h-8"></i>
+    </button>
+    <div data-id="554" id="lightbox-content-s5t6" class="w-[90vw] max-w-xl flex flex-col items-center"></div>
+    <p data-id="555" id="lightbox-caption-u7v8" class="text-gray-300 font-rajdhani text-sm md:text-base mt-4 text-center"></p>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer data-id="556" id="footer-w9x0" class="border-t border-cyberborder mt-12 py-8 px-4 relative overflow-hidden">
+    <div data-id="557" class="absolute inset-0 opacity-5" style="background-image: linear-gradient(var(--neon-blue) 1px, transparent 1px), linear-gradient(90deg, var(--neon-blue) 1px, transparent 1px); background-size: 30px 30px;"></div>
+    <div data-id="558" class="relative z-10 max-w-5xl mx-auto text-center">
+      <p data-id="559" class="font-orbitron text-sm md:text-base text-neonblue glitch-text text-glow-blue uppercase tracking-[0.2em] mb-3">Fiesta ST // Always Running</p>
+      <div data-id="560" class="flex justify-center gap-4 mb-4">
+        <span data-id="561" class="w-9 h-9 rounded-full border border-cyberborder flex items-center justify-center text-neonblue hover:text-neonpink hover:border-neonpink transition-colors cursor-pointer"><i data-id="562" data-lucide="instagram" class="w-4 h-4"></i></span>
+        <span data-id="563" class="w-9 h-9 rounded-full border border-cyberborder flex items-center justify-center text-neonblue hover:text-neonpink hover:border-neonpink transition-colors cursor-pointer"><i data-id="564" data-lucide="facebook" class="w-4 h-4"></i></span>
+        <span data-id="565" class="w-9 h-9 rounded-full border border-cyberborder flex items-center justify-center text-neonblue hover:text-neonpink hover:border-neonpink transition-colors cursor-pointer"><i data-id="566" data-lucide="youtube" class="w-4 h-4"></i></span>
+        <span data-id="567" class="w-9 h-9 rounded-full border border-cyberborder flex items-center justify-center text-neonblue hover:text-neonpink hover:border-neonpink transition-colors cursor-pointer"><i data-id="568" data-lucide="twitter" class="w-4 h-4"></i></span>
+      </div>
+      <p data-id="569" class="text-xs text-gray-500">© 2026 – David Procházka | Performance Blue #1</p>
+      <p data-id="570" class="text-xs text-gray-600 mt-1">Made by Copilot</p>
+    </div>
+  </footer>
+
+  <script>
+    // Guard Lucide
+    if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") {
+      lucide.createIcons();
+    }
+
+    // ======= TAB SWITCHING =======
+    const tabNames = { about: 'O Autě', gallery: 'Galerie', tuning: 'Tuning', drag: 'Drag Závody', meets: 'Srazy' };
+
+    function switchTab(tabId) {
+      // Desktop tabs
+      document.querySelectorAll('.tab-btn').forEach(function(btn) {
+        btn.classList.toggle('active', btn.dataset.tab === tabId);
+      });
+      // Mobile tabs
+      document.querySelectorAll('.mob-tab-btn').forEach(function(btn) {
+        btn.classList.toggle('text-neonblue', btn.dataset.tab === tabId);
+        btn.classList.toggle('text-gray-300', btn.dataset.tab !== tabId);
+      });
+      // Sections
+      document.querySelectorAll('.tab-content').forEach(function(sec) {
+        sec.classList.remove('active');
+      });
+      var target = document.getElementById('tab-' + tabId);
+      if (target) {
+        target.classList.add('active');
+      }
+      // Mobile label
+      var mobileLabel = document.getElementById('mobile-tab-label-k1l2');
+      if (mobileLabel) mobileLabel.textContent = tabNames[tabId] || tabId;
+    }
+
+    document.querySelectorAll('.tab-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() { switchTab(btn.dataset.tab); });
+    });
+    document.querySelectorAll('.mob-tab-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        switchTab(btn.dataset.tab);
+        closeMobileNav();
+      });
+    });
+
+    // ======= MOBILE NAV =======
+    var mobileNav = document.getElementById('mobile-nav-m3n4');
+    function openMobileNav() { if(mobileNav) mobileNav.classList.add('open'); }
+    function closeMobileNav() { if(mobileNav) mobileNav.classList.remove('open'); }
+
+    var menuBtn = document.getElementById('mobile-menu-btn-i9j0');
+    if (menuBtn) menuBtn.addEventListener('click', openMobileNav);
+    var closeBtn = document.getElementById('mobile-nav-close-o5p6');
+    if (closeBtn) closeBtn.addEventListener('click', closeMobileNav);
+
+    // ======= LIGHTBOX =======
+    var lightbox = document.getElementById('lightbox-o1p2');
+    var lightboxContent = document.getElementById('lightbox-content-s5t6');
+    var lightboxCaption = document.getElementById('lightbox-caption-u7v8');
+    var lightboxCloseBtn = document.getElementById('lightbox-close-q3r4');
+
+    document.querySelectorAll('.gallery-card').forEach(function(card) {
+      card.addEventListener('click', function() {
+        var artContainer = card.querySelector('.aspect-video');
+        if (artContainer && lightboxContent) {
+          lightboxContent.innerHTML = '';
+          var clone = artContainer.cloneNode(true);
+          clone.style.width = '100%';
+          clone.style.maxHeight = '60vh';
+          clone.classList.remove('aspect-video');
+          clone.style.aspectRatio = '16/9';
+          lightboxContent.appendChild(clone);
+        }
+        var caption = card.querySelector('p');
+        if (caption && lightboxCaption) {
+          lightboxCaption.textContent = caption.textContent;
+        }
+        if (lightbox) lightbox.classList.add('open');
+      });
+    });
+
+    if (lightboxCloseBtn) {
+      lightboxCloseBtn.addEventListener('click', function() {
+        if (lightbox) lightbox.classList.remove('open');
+      });
+    }
+    if (lightbox) {
+      lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) lightbox.classList.remove('open');
+      });
+    }
+
+    // ======= DRAG RACE SIMULATOR =======
+    var opponents = [
+      { name: 'Honda Civic Type R FK8', time: 13.1 },
+      { name: 'VW Golf GTI Mk7', time: 13.5 },
+      { name: 'BMW 135i E82', time: 12.8 },
+      { name: 'Renault Megane RS 265', time: 13.3 },
+      { name: 'Subaru WRX STI', time: 12.6 },
+      { name: 'Peugeot 308 GTi', time: 13.7 },
+      { name: 'Hyundai i30N', time: 13.2 },
+      { name: 'Seat Leon Cupra', time: 13.0 },
+      { name: 'Audi S3 8V', time: 12.9 },
+      { name: 'Mini Cooper JCW', time: 13.4 },
+      { name: 'Ford Focus ST Mk3', time: 13.6 },
+      { name: 'Mazda MX-5 turbo', time: 13.8 },
+      { name: 'Škoda Octavia RS', time: 13.5 }
+    ];
+
+    var raceBtn = document.getElementById('race-btn-u1v2');
+    var raceArena = document.getElementById('race-arena-w3x4');
+    var raceCountdown = document.getElementById('race-countdown-y5z6');
+    var raceBars = document.getElementById('race-bars-a7b8');
+    var barMe = document.getElementById('bar-me-e1f2');
+    var barOpp = document.getElementById('bar-opp-k7l8');
+    var oppName = document.getElementById('opponent-name-g3h4');
+    var raceResult = document.getElementById('race-result-m9n0');
+    var raceTimeMe = document.getElementById('race-time-me-c9d0');
+    var raceTimeOpp = document.getElementById('race-time-opp-i5j6');
+
+    var raceRunning = false;
+
+    if (raceBtn) {
+      raceBtn.addEventListener('click', function() {
+        if (raceRunning) return;
+        raceRunning = true;
+
+        // Pick random opponent
+        var opp = opponents[Math.floor(Math.random() * opponents.length)];
+        // My time: random between 12.7 and 13.5
+        var myTime = 12.7 + Math.random() * 0.8;
+        myTime = parseFloat(myTime.toFixed(2));
+        var oppTime = opp.time + (Math.random() * 0.6 - 0.3);
+        oppTime = parseFloat(oppTime.toFixed(2));
+
+        if (oppName) oppName.textContent = opp.name;
+        if (raceArena) raceArena.classList.remove('hidden');
+        if (raceBars) raceBars.classList.add('hidden');
+        if (raceResult) { raceResult.classList.add('hidden'); raceResult.textContent = ''; }
+        if (barMe) barMe.style.width = '0';
+        if (barOpp) barOpp.style.width = '0';
+        if (raceTimeMe) raceTimeMe.textContent = '';
+        if (raceTimeOpp) raceTimeOpp.textContent = '';
+
+        // Countdown
+        var counts = ['3', '2', '1', 'GO!'];
+        var ci = 0;
+        if (raceCountdown) raceCountdown.textContent = '';
+
+        var cdInterval = setInterval(function() {
+          if (ci < counts.length) {
+            if (raceCountdown) {
+              raceCountdown.textContent = counts[ci];
+              raceCountdown.style.color = ci === 3 ? 'var(--neon-green)' : 'var(--neon-blue)';
+            }
+            ci++;
+          } else {
+            clearInterval(cdInterval);
+            if (raceCountdown) raceCountdown.textContent = '';
+            startRace(myTime, oppTime);
+          }
+        }, 700);
+      });
+    }
+
+    function startRace(myTime, oppTime) {
+      if (raceBars) raceBars.classList.remove('hidden');
+
+      var maxTime = Math.max(myTime, oppTime);
+      var duration = 3000; // 3 seconds animation
+      var startTs = performance.now();
+
+      function animateRace(now) {
+        var elapsed = now - startTs;
+        var progress = Math.min(elapsed / duration, 1);
+
+        var myProgress = Math.min(progress * (maxTime / myTime), 1);
+        var oppProgress = Math.min(progress * (maxTime / oppTime), 1);
+
+        if (barMe) barMe.style.width = (myProgress * 100) + '%';
+        if (barOpp) barOpp.style.width = (oppProgress * 100) + '%';
+
+        if (myProgress >= 1 && raceTimeMe && !raceTimeMe.textContent) {
+          raceTimeMe.textContent = myTime.toFixed(2) + 's';
+        }
+        if (oppProgress >= 1 && raceTimeOpp && !raceTimeOpp.textContent) {
+          raceTimeOpp.textContent = oppTime.toFixed(2) + 's';
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(animateRace);
+        } else {
+          // Show result
+          if (raceTimeMe && !raceTimeMe.textContent) raceTimeMe.textContent = myTime.toFixed(2) + 's';
+          if (raceTimeOpp && !raceTimeOpp.textContent) raceTimeOpp.textContent = oppTime.toFixed(2) + 's';
+
+          if (raceResult) {
+            raceResult.classList.remove('hidden');
+            if (myTime < oppTime) {
+              raceResult.textContent = '🏆 VÝHRA!';
+              raceResult.style.color = 'var(--neon-green)';
+            } else if (myTime > oppTime) {
+              raceResult.textContent = '❌ PROHRA!';
+              raceResult.style.color = 'var(--neon-danger)';
+            } else {
+              raceResult.textContent = '⚡ REMÍZA!';
+              raceResult.style.color = 'var(--neon-blue)';
+            }
+          }
+          raceRunning = false;
+        }
+      }
+      requestAnimationFrame(animateRace);
+    }
+  </script>
+</body>
+</html>
